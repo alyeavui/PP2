@@ -1,0 +1,15 @@
+a = "a"
+b = 1
+c = 1.5
+d = 2j
+e = ['a', 'b', 'c']
+f = ('a', 'b', 'c')
+g = range(6)
+h = {"Name" : "Ayau", "Age" : 17}
+i = {'a', 'b', 'c'}
+j = frozenset({'a', 'b', 'c'})
+k = True
+l = b"lol"
+m = bytearray(6)
+n = memoryview(bytes(9))
+o = None

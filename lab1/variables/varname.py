@@ -1,0 +1,6 @@
+firstvar = "Ayau"
+first_var = "Ayau"
+_first_var = "Ayau"
+firstVar = "Ayau"
+FIRSTVAR = "Ayau"
+firstvar2 = "Ayau"
