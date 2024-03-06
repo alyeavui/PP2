@@ -1,14 +1,16 @@
 #1
 import math
-n = int(input)
+n = int(input())
 for i in range(1, n + 1):
-    print(math.pow(i, 2))
+    print(int(math.pow(i, 2)))
 
 #2
 m = int(input())
-for i in range(1, m):
-    if(i % 2 == 0):
-        print(i, sep = ", ")
+n = []
+for i in range(1, m + 1):
+    if (i % 2 == 0):
+        n.append(str(i))
+print(", ". join(n))
 
 #3
 a = int(input())
