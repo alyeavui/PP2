@@ -10,8 +10,8 @@ clock = pygame.time.Clock()
 mickeyclock = pygame.image.load('mickeyclock.jpeg')
 mickeyclock = pygame.transform.scale(mickeyclock, (500, 500))
 
-mickeyhand_minute = pygame.image.load('mickeyhand_minute.png')  
-mickeyhand_second = pygame.image.load('clock-tongue-side.png')
+mickeyhand_minute = pygame.image.load('clock-tongue-side.png')  
+mickeyhand_second = pygame.image.load('seconds.png')
 mickeyhand_minute = pygame.transform.scale(mickeyhand_minute, (60, 60))
 mickeyhand_second = pygame.transform.scale(mickeyhand_second, (100, 100))
 minute_angle = 0
