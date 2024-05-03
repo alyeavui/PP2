@@ -1,55 +1,54 @@
 import psycopg2
-import csv
 
-conn = psycopg2.connect(
-    dbname='phoneboook',
-    user='alyeavui',
-    password='1234',
-    host='localhost',
-    port='5432'
-)
-cursor = conn.cursor()
-cursor.execute('''CREATE TABLE IF NOT EXISTS phonebook
-              (id SERIAL PRIMARY KEY, username TEXT, phone TEXT)''')
+conn = psycopg2.connect(host="localhost", dbname="postgres", user="alyeavui", password="1234", port=5432)
+
+cur = conn.cursor()
+
+cur.execute('DROP TABLE IF EXISTS phonebook')
+
+cur.execute(""" CREATE TABLE IF NOT EXISTS phonebook(
+            id INT PRIMARY KEY,
+            name VARCHAR(255),
+            surname VARCHAR(255),
+            phonenumber VARCHAR(11)
+);
+""")
+
+cur.execute(""" INSERT INTO phonebook (id, name, surname, phonenumber) VALUES
+(1, 'Ayaulym', 'Zhuniskhan', 87757770000),
+(2, 'Aisulu', 'Alpamys', 87769871300),
+(3, 'Zere', 'Almaskyzy', 87711659281),
+(4, 'Ayau', 'Ayauka', 87784886806),
+(5, 'Ais', 'Ai', 87780441865),
+(6, 'Zer', 'Zereshka' , 87475895015),
+(7, 'Aylin', 'Ay', 87470122354),
+(8, 'Aiym', 'Aiy', 87750054994),
+(9, 'Amina', 'Ami', 87057428066),
+(10,'Sabina', 'Sabyn', 87017481646);
+""")
+
+cur.execute('''UPDATE phonebook 
+            SET name = 'China', phonenumber = 87014567891
+            WHERE id = 3;
+            ''')
+
+cur.execute("""SELECT id, name,surname, phonenumber FROM phonebook WHERE SUBSTR(name,1,1) = 'A' """)
+for row in cur.fetchall():
+    print(row)
+
+print('\n')
+
+cur.execute("""SELECT id, name,surname, phonenumber FROM phonebook WHERE SUBSTR(phonenumber,1,4) = '8747' """)
+for row in cur.fetchall():
+    print(row)
+
+print('\n')
+cur.execute("""DELETE FROM phonebook WHERE name = 'Ayau' OR SUBSTR(phonenumber,1,4) = '8778' """)
+cur.execute('SELECT * FROM phonebook')
+for row in cur.fetchall():
+    print(row)
+
+
 conn.commit()
-
-def insert_data_from_csv(file_path):
-    with open(file_path, 'r') as file:
-        csv_reader = csv.reader(file)
-        for row in csv_reader:
-            cursor.execute('INSERT INTO phonebook (username, phone) VALUES (%s, %s)', row)
-    conn.commit()
-
-def insert_data_from_console():
-    username = input('Enter username: ')
-    phone = input('Enter phone number: ')
-    cursor.execute('INSERT INTO phonebook (username, phone) VALUES (%s, %s)', (username, phone))
-    conn.commit()
-
-def update_data(username, new_username=None, new_phone=None):
-    if new_username:
-        cursor.execute('UPDATE phonebook SET username = %s WHERE username = %s', (new_username, username))
-    if new_phone:
-        cursor.execute('UPDATE phonebook SET phone = %s WHERE username = %s', (new_phone, username))
-    conn.commit()
-
-def query_data(filter_by=None, value=None):
-    if filter_by and value:
-        cursor.execute(f'SELECT * FROM phonebook WHERE {filter_by} = %s', (value,))
-    else:
-        cursor.execute('SELECT * FROM phonebook')
-    rows = cursor.fetchall()
-    for row in rows:
-        print(row)
-
-def delete_data(filter_by, value):
-    cursor.execute(f'DELETE FROM phonebook WHERE {filter_by} = %s', (value,))
-    conn.commit()
-
-insert_data_from_csv('phonebook_data.csv')
-insert_data_from_console()
-update_data('Alice', new_phone='1234567890')
-query_data()
-delete_data('username', 'Alice')
-
+cur.close()
 conn.close()
