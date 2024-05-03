@@ -15,22 +15,22 @@ cur.execute(""" CREATE TABLE IF NOT EXISTS phonebook(
 """)
 
 cur.execute(""" INSERT INTO phonebook (id, name, surname, phonenumber) VALUES
-(1, 'Zhaksylyk', 'Phaka', 87757770000),
-(2, 'Akbar', 'Maka', 87769871300),
-(3, 'Shyngys', 'China', 87077465360),
-(4, 'Alex', 'Ale', 87784886806),
-(5, 'Ivan', 'Avanushka', 87780441865),
-(6, 'Ayan', 'Ayanchik', 87475895015),
-(7, 'Miras', 'Aayra', 87470122354),
-(8, 'Marat', 'Gara', 87750054994),
-(9, 'Max', 'Vaxi', 87057428066),
-(10,'Akhat', 'Akho', 87017481646);
+(1, 'Ayaulym', 'Zhuniskhan', 87757770000),
+(2, 'Aisulu', 'Alpamys', 87769871300),
+(3, 'Zere', 'Almaskyzy', 87711659281),
+(4, 'Ayau', 'Ayauka', 87784886806),
+(5, 'Ais', 'Ai', 87780441865),
+(6, 'Zer', 'Zereshka' , 87475895015),
+(7, 'Aylin', 'Ay', 87470122354),
+(8, 'Aiym', 'Aiy', 87750054994),
+(9, 'Amina', 'Ami', 87057428066),
+(10,'Sabina', 'Sabyn', 87017481646);
 """)
 
 id = 11
 def add_data():
     cur.execute('''INSERT INTO phonebook (id,name,surname,phonenumber) VALUES
-                (11, 'Kairo' , 'Airosh' , 87715648210)
+                (11, 'Umit' , 'Umka' , 87715648210)
     ''')
 
 def return_data():
