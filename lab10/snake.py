@@ -5,7 +5,7 @@ import psycopg2
 
 pygame.init()
 
-conn = psycopg2.connect(host="localhost", dbname="postgres", user="postgres", password="123456", port=5432)
+conn = psycopg2.connect(host="localhost", dbname="postgres", user="alyeavui", password="1234", port=5432)
 cur = conn.cursor()
 
 cur.execute('''DROP TABLE IF EXISTS users''')
