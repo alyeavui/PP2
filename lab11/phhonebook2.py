@@ -1,71 +1,65 @@
 import psycopg2
 
-conn = psycopg2.connect(
-    dbname='phoonebook',
-    user='alyeavui',
-    password='1234',
-    host='localhost',
-    port='5432'
-)
-cursor = conn.cursor()
+conn = psycopg2.connect(host="localhost", dbname="postgres", user="postgres", password="123456", port=5432)
 
-def get_records_by_pattern(pattern):
-    cursor.execute("""
-    SELECT * FROM users
-    WHERE name LIKE %s
-    OR surname LIKE %s
-    OR phone LIKE %s
-    """, ('%' + pattern + '%', '%' + pattern + '%', '%' + pattern + '%'))
-    return cursor.fetchall()
+cur = conn.cursor()
 
-def insert_or_update_user(name, phone):
-    cursor.execute("""
-    DO $$
-    BEGIN
-        IF EXISTS (SELECT 1 FROM users WHERE name = %s) THEN
-            UPDATE users SET phone = %s WHERE name = %s;
-        ELSE
-            INSERT INTO users (name, phone) VALUES (%s, %s);
-        END IF;
-    END;
-    $$ LANGUAGE plpgsql;
-    """, (name, phone, name, name, phone))
-    conn.commit()
+cur.execute('DROP TABLE IF EXISTS phonebook')
 
-def insert_many_users(user_data):
-    cursor.execute("""
-    DO $$
-    DECLARE
-        user_name TEXT;
-        user_phone TEXT;
-    BEGIN
-        FOREACH user_data_item IN ARRAY %s LOOP
-            user_name := split_part(user_data_item, ',', 1);
-            user_phone := split_part(user_data_item, ',', 2);
-            IF LENGTH(user_phone) != 10 OR NOT user_phone ~ '^\d+$' THEN
-                RAISE EXCEPTION 'Invalid phone number format: %', user_phone;
-            END IF;
-            INSERT INTO users (name, phone) VALUES (user_name, user_phone);
-        END LOOP;
-    END;
-    $$ LANGUAGE plpgsql;
-    """, (user_data,))
-    conn.commit()
+cur.execute(""" CREATE TABLE IF NOT EXISTS phonebook(
+            id INT PRIMARY KEY,
+            name VARCHAR(255),
+            surname VARCHAR(255),
+            phonenumber VARCHAR(11)
+);
+""")
 
-def get_users_with_pagination(limit_val, offset_val):
-    cursor.execute("""
-    SELECT * FROM users
-    ORDER BY id
-    LIMIT %s
-    OFFSET %s
-    """, (limit_val, offset_val))
-    return cursor.fetchall()
+cur.execute(""" INSERT INTO phonebook (id, name, surname, phonenumber) VALUES
+(1, 'Zhaksylyk', 'Phaka', 87757770000),
+(2, 'Akbar', 'Maka', 87769871300),
+(3, 'Shyngys', 'China', 87077465360),
+(4, 'Alex', 'Ale', 87784886806),
+(5, 'Ivan', 'Avanushka', 87780441865),
+(6, 'Ayan', 'Ayanchik', 87475895015),
+(7, 'Miras', 'Aayra', 87470122354),
+(8, 'Marat', 'Gara', 87750054994),
+(9, 'Max', 'Vaxi', 87057428066),
+(10,'Akhat', 'Akho', 87017481646);
+""")
 
-def delete_user(username=None, phone=None):
-    cursor.execute("""
-    DELETE FROM users
-    WHERE name = %s OR phone = %s
-    """, (username, phone))
-    conn.commit()
+id = 11
+def add_data():
+    cur.execute('''INSERT INTO phonebook (id,name,surname,phonenumber) VALUES
+                (11, 'Kairo' , 'Airosh' , 87715648210)
+    ''')
 
+def return_data():
+    cur.execute("""SELECT id, name, surname, phonenumber FROM phonebook WHERE SUBSTR (name,1,1) = 'A' OR SUBSTR (surname,1,1) = 'A' """)
+    for row in cur.fetchall():
+        print(row)
+
+def delete_data():
+    print('\n')
+    cur.execute("""DELETE FROM phonebook WHERE name = 'Ayau' OR SUBSTR(phonenumber,1,4) = '8778' """)
+    cur.execute('SELECT * FROM phonebook')
+    for row in cur.fetchall():
+        print(row)
+
+def add_users():
+    global id
+    user = input("Enter name: ")
+    surname = input("Enter surname: ")
+    phonenumber = input("Enter phonenumber: ")
+
+    if(len(phonenumber) == 11) :
+        cur.execute('''INSERT INTO phonebook (id, name, surname, phonenumber) VALUES (%s, %s, %s, %s)''', (id,user,surname,phonenumber))
+        id+=1
+    else:
+        print("Wrong phonenumber!")
+
+
+add_users()
+
+conn.commit()
+cur.close()
 conn.close()
